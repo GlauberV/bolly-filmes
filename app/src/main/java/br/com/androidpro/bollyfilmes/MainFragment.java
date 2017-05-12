@@ -136,8 +136,8 @@ public class MainFragment extends Fragment {
             BufferedReader reader = null;
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "");
-            String idioma = preferences.getString(getString(R.string.prefs_idioma_key), "");
+            String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "popular"); //<---Assim resolveu o problema
+            String idioma = preferences.getString(getString(R.string.prefs_idioma_key), "pt-BR");
 
             try {
                 String urlBase = "https://api.themoviedb.org/3/movie/" + ordem + "?";
