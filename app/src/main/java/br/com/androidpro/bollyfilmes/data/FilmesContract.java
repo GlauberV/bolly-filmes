@@ -31,7 +31,7 @@ public class FilmesContract {
 
         //Sobrecarga -> Só para relembrar.
         public static Uri buildUriForFilmes() {
-            return CONTENT_URI.buildUpon().build();
+            return CONTENT_URI.buildUpon().build(); //Retorna a build completa da URI(Uniform Resource Identifier).
         }
 
         public static Uri buildUriForFilmes(long id) {
