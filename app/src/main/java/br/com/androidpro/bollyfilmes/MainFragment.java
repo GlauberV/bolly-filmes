@@ -1,12 +1,10 @@
 package br.com.androidpro.bollyfilmes;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -24,14 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
+import br.com.androidpro.bollyfilmes.Service.FilmesIntentService;
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -85,7 +76,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         getLoaderManager().initLoader(FILMES_LOADER, null, this);
 
-        new FilmesAsyncTask().execute();
+        Intent intentService = new Intent(getContext(), FilmesIntentService.class);
+        getActivity().startService(intentService);
 
         return view;
     }
@@ -119,7 +111,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (item.getItemId()) {
             case R.id.menu_atualizar:
-                new FilmesAsyncTask().execute();
+                //=========Substituindo o AsyncTask===============================================
+                Intent intentService = new Intent(getContext(), FilmesIntentService.class);
+                getActivity().startService(intentService);
+                //===============================================================================
                 Toast.makeText(getContext(), "Atualizando os filmes...", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_config:
@@ -183,96 +178,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-    }
-
-    public class FilmesAsyncTask extends AsyncTask<Void, Void, List<ItemFilme>> {
-
-        @Override
-        protected List<ItemFilme> doInBackground(Void... params) {
-            // https://api.themoviedb.org/3/movie/popular?api_key=qwer08776&language=pt-BR
-
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "popular"); //<---Assim resolveu o problema
-            String idioma = preferences.getString(getString(R.string.prefs_idioma_key), "pt-BR");
-
-            try {
-                String urlBase = "https://api.themoviedb.org/3/movie/" + ordem + "?";
-                String apiKey = "api_key";
-                String language = "language";
-
-                Uri uriApi = Uri.parse(urlBase).buildUpon()
-                        .appendQueryParameter(apiKey, BuildConfig.TMDB_API_KEY)
-                        .appendQueryParameter(language, idioma)
-                        .build();
-
-                URL url = new URL(uriApi.toString());
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                if (inputStream == null) {
-                    return null;
-                }
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String linha;
-                StringBuffer buffer = new StringBuffer();
-                while ((linha = reader.readLine()) != null) {
-                    buffer.append(linha);
-                    buffer.append("\n");
-                }
-
-                return JsonUtil.fromJsonToList(buffer.toString());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<ItemFilme> itemFilmes) {
-
-            if (itemFilmes == null) {
-                return;
-            }
-
-            for (ItemFilme itemFilme : itemFilmes) {
-                ContentValues values = new ContentValues();
-                values.put(FilmesContract.FilmeEntry._ID, itemFilme.getId());
-                values.put(FilmesContract.FilmeEntry.COLUMN_TITULO, itemFilme.getTitulo());
-                values.put(FilmesContract.FilmeEntry.COLUMN_DESCRICAO, itemFilme.getDescricao());
-                values.put(FilmesContract.FilmeEntry.COLUMN_POSTER_PATH, itemFilme.getPosterPath());
-                values.put(FilmesContract.FilmeEntry.COLUMN_CAPA_PATH, itemFilme.getCapaPath());
-                values.put(FilmesContract.FilmeEntry.COLUMN_AVALIACAO, itemFilme.getAvaliacao());
-                values.put(FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO, itemFilme.getDataLancamento());
-                values.put(FilmesContract.FilmeEntry.COLUMN_POPULARIDADE, itemFilme.getPopularidade());
-
-                //Vai atualizar, e devolver o numero de linhas atualizadas como um inteiro.
-                int update = getContext().getContentResolver().update(FilmesContract.FilmeEntry.buildUriForFilmes(itemFilme.getId()), values, null, null);
-                //Caso o numero de linhas atualizadas seja 0, então é porque está vazio e precisa ser preenchido.
-                if (update == 0) {
-                    getContext().getContentResolver().insert(FilmesContract.FilmeEntry.CONTENT_URI, values);
-                }
-            }
-        }
     }
 
     public interface Callback {

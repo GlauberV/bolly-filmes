@@ -3,7 +3,7 @@
     package="br.com.androidpro.bollyfilmes">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/BollyFilmesTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,30 +22,34 @@
         </activity>
 
         <activity
-            android:label="@string/detalhe_activity_label"
             android:name=".FilmeDetalheActivity"
+            android:label="@string/detalhe_activity_label"
             android:parentActivityName=".MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
 
         <activity
-            android:label="@string/settings_actiity_label"
             android:name=".SettingsActivity"
+            android:label="@string/settings_actiity_label"
             android:parentActivityName=".MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
 
         <provider
-            android:authorities="br.com.androidpro.bollyfilmes"
             android:name=".data.FilmesProvider"
-            android:exported="false"/> <!-- Faz com que o app fique visivel para outros apps-->
-        
+            android:authorities="br.com.androidpro.bollyfilmes"
+            android:exported="false"> <!-- Faz com que o app fique visivel para outros apps-->
+
+        </provider>
+
+        <service android:name=".Service.FilmesIntentService" />
+
     </application>
 
 </manifest>
