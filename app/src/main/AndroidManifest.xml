@@ -50,6 +50,10 @@
 
         <service android:name=".Service.FilmesIntentService" />
 
+        <receiver
+            android:name=".Service.FilmesIntentService$FilmesReceiver"
+            android:enabled="true" />
+
     </application>
 
 </manifest>

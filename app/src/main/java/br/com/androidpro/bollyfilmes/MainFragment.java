@@ -1,6 +1,9 @@
 package br.com.androidpro.bollyfilmes;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -76,9 +79,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         getLoaderManager().initLoader(FILMES_LOADER, null, this);
 
-        Intent intentService = new Intent(getContext(), FilmesIntentService.class);
-        getActivity().startService(intentService);
-
         return view;
     }
 
@@ -111,14 +111,19 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (item.getItemId()) {
             case R.id.menu_atualizar:
-                //=========Substituindo o AsyncTask===============================================
-                Intent intentService = new Intent(getContext(), FilmesIntentService.class);
-                getActivity().startService(intentService);
-                //===============================================================================
+                //===Configurando para atualizar nossos filmes uma vez por dia======================
+                Intent intentAlarme = new Intent(getContext(), FilmesIntentService.FilmesReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intentAlarme, PendingIntent.FLAG_ONE_SHOT);
+
+                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
                 Toast.makeText(getContext(), "Atualizando os filmes...", Toast.LENGTH_LONG).show();
                 return true;
+
             case R.id.menu_config:
                 startActivity(new Intent(getContext(), SettingsActivity.class));
+
             default:
                 return super.onOptionsItemSelected(item);
         }
