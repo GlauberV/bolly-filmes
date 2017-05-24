@@ -1,4 +1,4 @@
-package br.com.androidpro.bollyfilmes.Service;
+package br.com.androidpro.bollyfilmes.service;
 
 //22 de maio de 2017
 

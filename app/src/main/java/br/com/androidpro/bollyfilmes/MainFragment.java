@@ -25,7 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import br.com.androidpro.bollyfilmes.Service.FilmesIntentService;
+import br.com.androidpro.bollyfilmes.service.FilmesIntentService;
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
