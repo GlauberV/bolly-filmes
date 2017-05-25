@@ -1,9 +1,6 @@
 package br.com.androidpro.bollyfilmes;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -25,8 +22,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import br.com.androidpro.bollyfilmes.service.FilmesIntentService;
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
+import br.com.androidpro.bollyfilmes.sync.FilmesSyncAdapter;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -111,12 +108,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (item.getItemId()) {
             case R.id.menu_atualizar:
-                //===Configurando para atualizar nossos filmes uma vez por dia======================
-                Intent intentAlarme = new Intent(getContext(), FilmesIntentService.FilmesReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intentAlarme, PendingIntent.FLAG_ONE_SHOT);
 
-                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                FilmesSyncAdapter.syncImmediately(getContext());
 
                 Toast.makeText(getContext(), "Atualizando os filmes...", Toast.LENGTH_LONG).show();
                 return true;

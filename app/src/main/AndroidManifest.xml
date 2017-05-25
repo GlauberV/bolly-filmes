@@ -52,8 +52,6 @@
 
         </provider>
 
-        <service android:name=".service.FilmesIntentService" />
-
         <service android:name=".sync.FilmesAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
