@@ -47,7 +47,8 @@
         <provider
             android:name=".data.FilmesProvider"
             android:authorities="@string/content_authority"
-            android:exported="false"> <!-- Faz com que o app fique visivel para outros apps-->
+            android:exported="false"
+            android:syncable="true">
 
         </provider>
 
@@ -63,7 +64,9 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <service android:name=".sync.FilmesSyncService">
+        <service
+            android:name=".sync.FilmesSyncService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
