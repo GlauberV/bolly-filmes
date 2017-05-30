@@ -4,15 +4,22 @@
     android:layout_height="match_parent">
 
     <ListPreference
-        android:title="@string/prefs_ordem_label"
-        android:key="@string/prefs_ordem_key"
+        android:entries="@array/prefs_ordem_entries"
         android:entryValues="@array/prefs_ordem_values"
-        android:entries="@array/prefs_ordem_entries" />
+        android:key="@string/prefs_ordem_key"
+        android:title="@string/prefs_ordem_label" />
 
     <ListPreference
-        android:title="@string/prefs_idioma_label"
-        android:key="@string/prefs_idioma_key"
+        android:entries="@array/prefs_idioma_entries"
         android:entryValues="@array/prefs_idioma_values"
-        android:entries="@array/prefs_idioma_entries" />
+        android:key="@string/prefs_idioma_key"
+        android:title="@string/prefs_idioma_label" />
+
+    <CheckBoxPreference
+        android:defaultValue="@string/prefs_notif_filmes_default"
+        android:key="@string/prefs_notif_key"
+        android:summaryOff="@string/prefs_notif_filmes_off"
+        android:summaryOn="@string/prefs_notif_filmes_on"
+        android:title="@string/prefs_notif_filmes_titulo" />
 
 </PreferenceScreen>

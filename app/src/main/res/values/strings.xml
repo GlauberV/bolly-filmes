@@ -43,4 +43,11 @@
     <string name="sync_account_type">bollyfilmes.androidpro.com.br</string>
     <string name="content_authority">br.com.androidpro.bollyfilmes</string>
 
+    <!-- Preferencias de notificações -->
+    <string name="prefs_notif_filmes_titulo">Notificações</string>
+    <string name="prefs_notif_key">prefs_notify_filmes</string>
+    <string name="prefs_notif_filmes_off">Desabilitado</string>
+    <string name="prefs_notif_filmes_on">Habilitado</string>
+    <string name="prefs_notif_filmes_default">true</string>
+
 </resources>
